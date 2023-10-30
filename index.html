@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Alert</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
+
+
+</head>
+<body>
+<h1> Websocket Test </h1>
+
+<div id="app">
+
+<li v-for="(item, index) in names">
+
+  {{ item + new Date().toISOString() }}
+</li>
+
+</div>
+
+<script>
+    const { createApp } = Vue
+  
+    createApp({
+        created: function () {
+            this.ws = new WebSocket('ws://localhost:4000');
+
+            this.ws.onopen = () => {
+                console.log('ws opened on browser')
+                this.ws.send('hello world')
+            }
+
+            this.ws.onmessage = (message) => {
+                console.log(`message received`, message.data)
+                this.stocks.push(`${new Date().toISOString()} -> ${message.data}`);
+            }
+        },
+
+      data() {
+        return {
+          message: 'Hello Vue!',
+          names: []
+        }
+      },
+    }).mount('#app')
+  </script>
+
+</body>
+</html>
